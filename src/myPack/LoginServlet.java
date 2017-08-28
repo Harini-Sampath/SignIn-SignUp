@@ -31,7 +31,7 @@ public class LoginServlet extends HttpServlet {
 		Query q = new Query("User").setFilter(new FilterPredicate("userEmail", FilterOperator.EQUAL,userE ));
 		PreparedQuery pq = datastore.prepare(q);
 		com.google.appengine.api.datastore.Entity storedUser = pq.asSingleEntity();
-		
+		if (storedUser != null) {
 		String storedPassword = (String) storedUser.getProperty("passWord");
 		
 		String storedUserName = (String) storedUser.getProperty("userName");
@@ -41,11 +41,15 @@ public class LoginServlet extends HttpServlet {
 		if (storedPassword.equals(password)) {
 			req.getRequestDispatcher("/profile").include(req, res);
 		} else {
-			out.print("<h2><center>Sorry UserEmail or Password Error!</center><h2>");
+			out.print("<h2><center>Sorry Password Error!</center><h2>");
 			req.getRequestDispatcher("/index.html").forward(req, res);
 
 		}
 
+	}else{
+		out.print("<h2><center>Sorry UserEmail Error!</center><h2>");
+                        req.getRequestDispatcher("/index.html").forward(req, res);	
 	}
 
+}
 }
